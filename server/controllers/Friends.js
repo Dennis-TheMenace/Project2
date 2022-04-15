@@ -1,9 +1,10 @@
 const models = require('../models');
-const DomoModel = require('../models/Domo');
+const FriendModel = require('../models/Friends');
+const DomoModel = require('../models/Friends');
 
 const { Domo } = models;
 
-const makerPage = (req, res) => res.render('app');
+const friendPage = (req, res) => res.render('app');
 
 const makeDomo = async (req, res) => {
   if (!req.body.name || !req.body.age || !req.body.fruit) {
@@ -30,20 +31,20 @@ const makeDomo = async (req, res) => {
   }
 };
 
-const getDomos = (req, res) => DomoModel.findByOwner(req.session.account._id, (err, docs) => {
+const getFriends = (req, res) => FriendModel.findByOwner(req.session.account._id, (err, docs) => {
   if (err) {
     console.log(err);
     return res.status(400).json({ error: 'An error has occured!' });
   }
 
-  return res.json({ domos: docs });
+  return res.json({ friends: docs });
 });
 
 const domoFace = (req, res) => res.render('domoFace');
 
 module.exports = {
-  makerPage,
+  friendPage,
   makeDomo,
-  getDomos,
+  getFriends,
   domoFace,
 };

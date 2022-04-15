@@ -1,85 +1,77 @@
 const helper = require('./helper.js');
 
-const handleDomo = (e) =>
+const handleFriend = (e) =>
 {
     e.preventDefault();
     helper.hideError();
 
-    const name = e.target.querySelector('#domoName').value;
-    const age = e.target.querySelector('#domoAge').value;
-    const fruit = e.target.querySelector('#domoFruit').value;
+    const name = e.target.querySelector('#friendName').value;
     const _csrf = e.target.querySelector('#_csrf').value;
 
-    if(!name || !age || !fruit)
+    if(!name)
     {
         helper.handleError('All fields are required!');
         return false;
     }
 
-    helper.sendPost(e.target.action, {name, age, fruit, _csrf}, loadDomosFromServer);
+    helper.sendPost(e.target.action, {name, _csrf}, loadFriendsFromServer);
 
     return false;
 }
 
-const DomoForm = (props) =>
+const FindFriend = (props) =>
 {
     return(
-        <form id="domoForm"
-            onSubmit={handleDomo}
-            name="domoForm"
+        <form id="findFriend"
+            onSubmit={handleFriend}
+            name="findFriend"
             action="/maker"
-            method="POST"
-            className="domoForm"
+            method="GET"
+            className="findFriend"
         >
             <label htmlFor="name">Name: </label>
-            <input id="domoName" type="text" name="name" placeholder="Domo Name" />
-            <label htmlFor="fruit">Fruit: </label>
-            <input id="domoFruit" type="text" name="fruit" placeholder="Favorite Fruit"/>
-            <label htmlFor="age">Age: </label>
-            <input id="domoAge" type="number" min="0" name="age" />
+            <input id="freindName" type="text" name="name" placeholder="Friend Name" />
             <input id="_csrf" type="hidden" name="_csrf" value={props.csrf} />
             <input className="makeDomoSubmit" type="submit" value="Make Domo" />
         </form>
     );
 };
 
-const DomoList = (props) =>
+const FriendsList = (props) =>
 {
-    if(props.domos.length === 0)
+    if(props.friends.length === 0)
     {
         return(
-            <div className="domoList">
-                <h3 className="emptyDomo">No Domos Yet!</h3>
+            <div className="friendsList">
+                <h3 className="noFriends">No Friends Yet!</h3>
             </div>
         );
     }
 
-    const domoNodes = props.domos.map(domo =>
+    const friendNodes = props.friends.map(friend =>
     {
         return(
-            <div key={domo._id} className="domo">
+            <div key={friend._id} className="friend">
                 <img src="/assets/img/domoface.jpeg" alt="domo face" className="domoFace" />
-                <h3 className="domoName">Name: {domo.name}</h3>
-                <h3 className="domoAge">Age: {domo.age}</h3>
-                <h3 className="domoFruit">Favorite Fruit: {domo.fruit}</h3>
+                <h3 className="friendName">Name: {friend.name}</h3>
             </div>
         );
     });
 
     return(
-        <div className="domoList">
-            {domoNodes}
+        <div className="friendsList">
+            {friendNodes}
         </div>
     );
 }
 
-const loadDomosFromServer = async () =>
+const loadFriendsFromServer = async () =>
 {
-    const response = await fetch('/getDomos');
+    const response = await fetch('/getFriends');
     const data = await response.json();
     ReactDOM.render(
-        <DomoList domos={data.domos} />,
-        document.getElementById('domos')
+        <FriendsList friend={data.friend} />,
+        document.getElementById('friends')
     );
 }
 
@@ -89,16 +81,16 @@ const init = async () =>
     const data = await response.json();
 
     ReactDOM.render(
-        <DomoForm csrf={data.csrfToken} />,
-        document.getElementById('makeDomo')
+        <FindFriend csrf={data.csrfToken} />,
+        document.getElementById('findFriend')
     );
 
     ReactDOM.render(
-        <DomoList domos={[]} />,
-        document.getElementById('domos')
+        <FriendsList friends={[]} />,
+        document.getElementById('friends')
     );
 
-    loadDomosFromServer();
+    loadFriendsFromServer();
 }
 
 window.onload = init;
