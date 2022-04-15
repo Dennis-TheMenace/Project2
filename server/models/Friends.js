@@ -13,7 +13,7 @@ const FriendSchema = new mongoose.Schema({
       trim: true,
       set: setName,
     },
-    balance:
+  balance:
     {
       type: Number,
       required: true,

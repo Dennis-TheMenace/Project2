@@ -1,20 +1,17 @@
-const models = require('../models');
+// const models = require('../models');
 const FriendModel = require('../models/Friends');
-const DomoModel = require('../models/Friends');
 
-const { Domo } = models;
+// const { Friend } = models;
 
 const friendPage = (req, res) => res.render('app');
 
-const makeDomo = async (req, res) => {
-  if (!req.body.name || !req.body.age || !req.body.fruit) {
+/* const makeDomo = async (req, res) => {
+  if (!req.body.name) {
     return res.status(400).json({ error: 'All fields are required' });
   }
 
-  const domoData = {
+  const friendData = {
     name: req.body.name,
-    age: req.body.age,
-    fruit: req.body.fruit,
     owner: req.session.account._id,
   };
 
@@ -29,7 +26,7 @@ const makeDomo = async (req, res) => {
     }
     return res.status(400).json({ error: 'An error occured' });
   }
-};
+}; */
 
 const getFriends = (req, res) => FriendModel.findByOwner(req.session.account._id, (err, docs) => {
   if (err) {
@@ -44,7 +41,7 @@ const domoFace = (req, res) => res.render('domoFace');
 
 module.exports = {
   friendPage,
-  makeDomo,
+  // makeDomo,
   getFriends,
   domoFace,
 };
