@@ -13,12 +13,6 @@ const FriendSchema = new mongoose.Schema({
       trim: true,
       set: setName,
     },
-  balance:
-    {
-      type: Number,
-      required: true,
-      default: 100,
-    },
   createdDate:
     {
       type: Date,

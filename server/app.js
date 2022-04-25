@@ -53,7 +53,7 @@ app.use(session({
       client: redisClient,
     },
   ),
-  secret: 'Domo Arigato',
+  secret: 'Mr. Roboto',
   resave: true,
   saveUninitialized: true,
   cookie:

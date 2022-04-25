@@ -47,6 +47,33 @@ const handleSignup = (e) =>
     return false;
 }
 
+const handleNewPass = (e) =>
+{
+    e.preventDefault();
+    helper.hideError();
+
+    const username = e.target.querySelector('#user').value;
+    const pass = e.target.querySelector('#pass').value;
+    const pass2 = e.target.querySelector('#pass2').value;
+    const _csrf = e.target.querySelector('#_csrf').value;
+
+    if(!username || !pass || !pass2)
+    {
+        helper.handleError('All feilds required!');
+        return false;
+    }
+
+    if(pass !== pass2)
+    {
+        helper.handleError('Passwords do not match');
+        return false;
+    }
+
+    helper.sendPost(e.target.action, {username, pass, pass2, _csrf});
+
+    return false;
+}
+
 const LoginWindow = (props) =>
 {
     return(
@@ -89,6 +116,28 @@ const SignupWindow = (props) =>
     );
 };
 
+const NewPassWindow = (props) =>
+{
+    return(
+        <form id="newPassFrom"
+              name="newPassFrom"
+              onSubmit={handleNewPass}
+              action="/newPass"
+              method="POST"
+              className="mainForm"
+        >
+            <label htmlFor="username">Username: </label>
+            <input id="user" type="text" name="username" placeholder="username" />
+            <label htmlFor="pass">Password: </label>
+            <input id="pass" type="password" name="pass" placeholder="new password" />
+            <label htmlFor="pass2">Password: </label>
+            <input id="pass2" type="password" name="pass2" placeholder="retype password" />
+            <input id="_csrf" type="hidden" name="_csrf" value={props.csrf} />
+            <input className="formSubmit" type="submit" value="Update Password" />
+        </form>
+    );
+};
+
 const init = async () =>
 {
     const response = await fetch('/getToken');
@@ -96,6 +145,7 @@ const init = async () =>
 
     const loginButton = document.getElementById('loginButton');
     const signupButton = document.getElementById('signupButton');
+    const newPassButton = document.getElementById('newPassButton');
 
     loginButton.addEventListener('click', (e) =>
     {
@@ -109,6 +159,14 @@ const init = async () =>
     {
         e.preventDefault();
         ReactDOM.render(<SignupWindow csrf={data.csrfToken} />,
+            document.getElementById('content'));
+        return false;
+    });
+
+    newPassButton.addEventListener('click', (e) =>
+    {
+        e.preventDefault();
+        ReactDOM.render(<NewPassWindow csrf={data.csrfToken} />,
             document.getElementById('content'));
         return false;
     });

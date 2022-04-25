@@ -17,22 +17,60 @@ const handleFriend = (e) =>
     helper.sendPost(e.target.action, {name, _csrf}, loadFriendsFromServer);
 
     return false;
-}
+};
+
+const handleFunds = (e) =>
+{
+    e.preventDefault();
+    helper.hideError();
+
+    const amount = e.target.querySelector('#funds').value;
+    const _csrf = e.target.querySelector('#_csrf').value;
+
+    if(amount < 0)
+    {
+        helper.handleError('Enter valid amount!');
+        return false;
+    }
+
+    helper.sendPost(e.target.action, {amount, _csrf});
+
+    return false;
+};
 
 const FindFriend = (props) =>
 {
     return(
-        <form id="findFriend"
+        <form id="findFriends"
             onSubmit={handleFriend}
-            name="findFriend"
+            name="findFriends"
             action="/maker"
             method="GET"
-            className="findFriend"
+            className="findFriends"
         >
             <label htmlFor="name">Name: </label>
             <input id="freindName" type="text" name="name" placeholder="Friend Name" />
             <input id="_csrf" type="hidden" name="_csrf" value={props.csrf} />
-            <input className="makeDomoSubmit" type="submit" value="Make Domo" />
+            <input className="findFriends" type="submit" value="Find Friend" />
+        </form>
+    );
+};
+
+const AddFundsWindow = (props) =>
+{
+    return(
+
+        <form id="addFunds"
+              name="addFunds"
+              onSubmit={handleFunds}
+              action="/funds"
+              method="POST"
+              className="mainForm"
+        >
+            <label htmlFor="funds">Add Funds: </label>
+            <input id="funds" type="number" name="funds" placeholder="$$$" />
+            <input id="_csrf" type="hidden" name="_csrf" value={props.csrf} />
+            <input className="formSubmit" type="submit" value="Add Funds" />
         </form>
     );
 };
@@ -63,7 +101,7 @@ const FriendsList = (props) =>
             {friendNodes}
         </div>
     );
-}
+};
 
 const loadFriendsFromServer = async () =>
 {
@@ -73,16 +111,34 @@ const loadFriendsFromServer = async () =>
         <FriendsList friend={data.friend} />,
         document.getElementById('friends')
     );
-}
+};
 
 const init = async () =>
 {
     const response = await fetch('/getToken');
     const data = await response.json();
 
+    const fundsButton = document.getElementById('fundsButton');
+    const friendsButton = document.getElementById('friendsButton');
+
+    fundsButton.addEventListener('click', (e) =>
+    {
+        e.preventDefault();
+        ReactDOM.render(<AddFundsWindow csrf={data.csrfToken} />,
+            document.getElementById('addFunds'));
+        return false;
+    });
+
+    friendsButton.addEventListener('click', (e) =>
+    {
+        ReactDOM.render(<FindFriend csrf={data.csrfToken} />,
+            document.getElementById('findFriends'));
+        return false;
+    });
+
     ReactDOM.render(
         <FindFriend csrf={data.csrfToken} />,
-        document.getElementById('findFriend')
+        document.getElementById('findFriends')
     );
 
     ReactDOM.render(
@@ -91,6 +147,6 @@ const init = async () =>
     );
 
     loadFriendsFromServer();
-}
+};
 
 window.onload = init;

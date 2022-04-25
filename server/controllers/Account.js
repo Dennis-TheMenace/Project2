@@ -58,6 +58,51 @@ const signup = async (req, res) => {
   }
 };
 
+const newPass = async (req, res) => {
+  const username = `${req.body.username}`;
+  const pass = `${req.body.pass}`;
+  const pass2 = `${req.body.pass2}`;
+
+  if (!username || !pass || !pass2) {
+    return res.status(400).json({ error: 'All fields are required!' });
+  }
+
+  if (pass !== pass2) {
+    return res.status(400).json({ error: 'Passwords do not match!' });
+  }
+
+  try {
+    const doc = await Account.findOne({ username }).exec();
+    if (!doc) {
+      return res.status(400).json({ error: 'User does not exist!' });
+    }
+    doc.pass = pass;
+    return res.json({ redirect: '/login' });
+  } catch (err) {
+    console.log(err);
+    return res.status(400).json({ error: 'An error occured' });
+  }
+};
+
+// const fundsPage = (req, res) => res.render('fundsPage');
+
+// const addFunds = async (req, res) =>
+// {
+//   const amount = `${req.body.amount}`;
+
+//   if (!amount || amount < 0) {
+//     return res.status(400).json({ error: 'Enter Valid Amount!' });
+//   }
+
+//   try{
+
+//     return res.status(201).json({ balance: balance+amount});
+//   }catch (err) {
+//     console.log(err);
+//     return res.status(400).json({ error: 'An error occured' });
+//   }
+// }
+
 const getToken = (req, res) => res.json({ csrfToken: req.csrfToken() });
 
 module.exports = {
@@ -66,4 +111,7 @@ module.exports = {
   logout,
   signup,
   getToken,
+  // fundsPage,
+  // addFunds,
+  newPass,
 };

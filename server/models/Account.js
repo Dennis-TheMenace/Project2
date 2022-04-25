@@ -33,6 +33,12 @@ const AccountSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  balance:
+  {
+    type: Number,
+    required: true,
+    default: 100,
+  },
   createdDate: {
     type: Date,
     default: Date.now,
