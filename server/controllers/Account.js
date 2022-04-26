@@ -48,6 +48,7 @@ const signup = async (req, res) => {
     const newAccount = new Account({ username, password: hash });
     await newAccount.save();
     req.session.account = Account.toAPI(newAccount);
+    console.log(username);
     return res.json({ redirect: '/maker' });
   } catch (err) {
     console.log(err);
@@ -56,6 +57,7 @@ const signup = async (req, res) => {
     }
     return res.status(400).json({ error: 'An error occured' });
   }
+
 };
 
 const newPass = async (req, res) => {
@@ -76,32 +78,15 @@ const newPass = async (req, res) => {
     if (!doc) {
       return res.status(400).json({ error: 'User does not exist!' });
     }
-    doc.pass = pass;
+    doc.password = await Account.generateHash(pass);
+    doc.save();
+    
     return res.json({ redirect: '/login' });
   } catch (err) {
     console.log(err);
     return res.status(400).json({ error: 'An error occured' });
   }
 };
-
-// const fundsPage = (req, res) => res.render('fundsPage');
-
-// const addFunds = async (req, res) =>
-// {
-//   const amount = `${req.body.amount}`;
-
-//   if (!amount || amount < 0) {
-//     return res.status(400).json({ error: 'Enter Valid Amount!' });
-//   }
-
-//   try{
-
-//     return res.status(201).json({ balance: balance+amount});
-//   }catch (err) {
-//     console.log(err);
-//     return res.status(400).json({ error: 'An error occured' });
-//   }
-// }
 
 const getToken = (req, res) => res.json({ csrfToken: req.csrfToken() });
 
@@ -111,7 +96,5 @@ module.exports = {
   logout,
   signup,
   getToken,
-  // fundsPage,
-  // addFunds,
   newPass,
 };

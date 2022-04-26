@@ -22,8 +22,6 @@ const FriendSchema = new mongoose.Schema({
 
 FriendSchema.statics.toAPI = (doc) => ({
   name: doc.name,
-  age: doc.age,
-  fruit: doc.fruit,
 });
 
 FriendSchema.statics.findByOwner = (ownerId, callback) => {
@@ -31,7 +29,7 @@ FriendSchema.statics.findByOwner = (ownerId, callback) => {
     owner: mongoose.Types.ObjectId(ownerId),
   };
 
-  return FriendSchema.find(search).select('name').lean().exec(callback);
+  return FriendModel.find(search).select('name').lean().exec(callback);
 };
 
 FriendModel = mongoose.model('Friend', FriendSchema);
