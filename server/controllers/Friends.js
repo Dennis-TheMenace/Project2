@@ -76,7 +76,7 @@ const transferFunds = async (req, res, name) => {
     const friendDoc = await AccountModel.findOne(name).exec();
     friendDoc.balance += amount;
     friendDoc.save();
-    return res.status(201).json({ balance: newBalance});
+    return res.status(201).json({ balance: newBalance });
   } catch (err) {
     console.log(err);
     return res.status(400).json({ error: 'An error occured' });
