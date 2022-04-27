@@ -18,7 +18,6 @@ const addFriend = async (req, res) => {
 
   try {
     const name = await AccountModel.findOne({ username: req.body.name }).exec();
-    console.log(name);
     if (name) {
       const newFriend = new Friends(friendData);
       await newFriend.save();
