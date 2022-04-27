@@ -26,7 +26,7 @@ const login = (req, res) => {
 
     req.session.account = Account.toAPI(account);
 
-    return res.json({ redirect: '/maker' });
+    return res.json({ redirect: '/friend' });
   });
 };
 
@@ -49,7 +49,7 @@ const signup = async (req, res) => {
     await newAccount.save();
     req.session.account = Account.toAPI(newAccount);
     console.log(username);
-    return res.json({ redirect: '/maker' });
+    return res.json({ redirect: '/friend' });
   } catch (err) {
     console.log(err);
     if (err.code === 11000) {
@@ -57,7 +57,6 @@ const signup = async (req, res) => {
     }
     return res.status(400).json({ error: 'An error occured' });
   }
-
 };
 
 const newPass = async (req, res) => {
@@ -80,7 +79,7 @@ const newPass = async (req, res) => {
     }
     doc.password = await Account.generateHash(pass);
     doc.save();
-    
+
     return res.json({ redirect: '/login' });
   } catch (err) {
     console.log(err);

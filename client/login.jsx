@@ -152,6 +152,7 @@ const init = async () =>
         e.preventDefault();
         ReactDOM.render(<LoginWindow csrf={data.csrfToken} />,
             document.getElementById('content'));
+        helper.hideError();
         return false;
     });
 
@@ -160,6 +161,7 @@ const init = async () =>
         e.preventDefault();
         ReactDOM.render(<SignupWindow csrf={data.csrfToken} />,
             document.getElementById('content'));
+        helper.hideError();
         return false;
     });
 
@@ -168,6 +170,7 @@ const init = async () =>
         e.preventDefault();
         ReactDOM.render(<NewPassWindow csrf={data.csrfToken} />,
             document.getElementById('content'));
+        helper.hideError();
         return false;
     });
 

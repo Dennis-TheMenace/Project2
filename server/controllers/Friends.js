@@ -11,19 +11,20 @@ const addFriend = async (req, res) => {
     return res.status(400).json({ error: 'All fields are required' });
   }
 
-  try {
-    const name = await AccountModel.findOne({username: req.body.name}).exec();
-    if(name)
-    {
-      const friendData = {
-        name: req.body.name,
-        owner: req.session.account._id,
-      };
+  const friendData = {
+    name: req.body.name,
+    owner: req.session.account._id,
+  };
 
+  try {
+    const name = await AccountModel.findOne({ username: req.body.name }).exec();
+    console.log(name);
+    if (name) {
       const newFriend = new Friends(friendData);
       await newFriend.save();
       return res.status(201).json({ name: newFriend.name });
     }
+    return res.status(400).json({ error: 'Pesron does not exist!' });
   } catch (err) {
     console.log(err);
     if (err.code === 11000) {
@@ -59,17 +60,24 @@ const addFunds = async (req, res) => {
   }
 };
 
-const transferFunds = async (req, res) => {
+const transferFunds = async (req, res, name) => {
   const amount = `${req.body.amount}`;
 
-  if (!amount || amount < 0 || amount < balance) {
+  if (!amount || amount < 0) {
     return res.status(400).json({ error: 'Enter Valid Amount!' });
   }
 
   try {
     const doc = await AccountModel.findOne(req.session.account).exec();
+    if (amount > doc.balance) {
+      return res.status(400).json({ error: 'Enter Valid Amount!' });
+    }
     const newBalance = doc.balance - amount;
-    return res.status(201).json({ balance: newBalance });
+    doc.save();
+    const friendDoc = await AccountModel.findOne(name).exec();
+    friendDoc.balance += amount;
+    friendDoc.save();
+    return res.status(201).json({ balance: newBalance});
   } catch (err) {
     console.log(err);
     return res.status(400).json({ error: 'An error occured' });

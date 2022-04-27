@@ -14,8 +14,8 @@ const router = (app) => {
 
   app.get('/logout', mid.requiresLogin, controllers.Account.logout);
 
-  app.get('/maker', mid.requiresLogin, controllers.Friends.friendPage);
-  app.post('/maker', mid.requiresLogin, controllers.Friends.addFriend);
+  app.get('/friend', mid.requiresLogin, controllers.Friends.friendPage);
+  app.post('/friend', mid.requiresLogin, controllers.Friends.addFriend);
 
   // app.get('/funds', mid.requiresLogin, controllers.Friends.fundsPage);
   app.post('/funds', mid.requiresLogin, controllers.Friends.addFunds);
